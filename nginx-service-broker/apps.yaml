@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1
+spec:
+  selector:
+    matchLabels:
+      app: app1
+  template:
+    metadata:
+      labels:
+        app: app1
+    spec:
+      containers:
+      - name: app1
+        image: phirmware/nodeapp
+        resources:
+          limits:
+            memory: "58Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 3000
+          name:  app1port
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app2
+spec:
+  selector:
+    matchLabels:
+      app: app2
+  template:
+    metadata:
+      labels:
+        app: app2
+    spec:
+      containers:
+      - name: app2
+        image: phirmware/nodeapp:beta
+        resources:
+          limits:
+            memory: "58Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 3000
+          name:  app1port
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  app1service
+spec:
+  selector:
+    app:  app1
+  type:  LoadBalancer
+  ports:
+  - name:  app1port
+    port:  80
+    targetPort: app1port
+
+---
+
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  app2service
+spec:
+  selector:
+    app:  app2
+  type:  LoadBalancer
+  ports:
+  - name:  app2port
+    port:  80
+    targetPort: app2port
