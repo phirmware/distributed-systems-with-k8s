@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: kuard
+spec:
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        name: kuard
+        version: "1"
+    spec:
+      containers:
+        - name: kuard
+          image: "gcr.io/kuar-demo/kuard-amd64:green"
+          resources:
+            limits:
+              memory: "58Mi"
+              cpu: "100m"
+          ports:
+            - containerPort: 8080
